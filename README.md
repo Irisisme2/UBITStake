@@ -17,6 +17,8 @@ UBITStake allows users to participate in various staking pools, earn rewards, an
 - **🔗 Staking**  
   Users can stake their UBIT tokens in various staking pools with different reward rates. UBITStake offers a simple and intuitive interface for selecting staking pools and staking amounts, making it easy for users to start earning rewards.
 
+![staking.png](https://cdn.dorahacks.io/static/files/190a81d64222332ffd2ae98455faad00.png)
+
 - **♻️ Unstaking**  
   UBITStake allows users to unstake their tokens at any time. The unstaking process is transparent and straightforward, with clear information on any potential penalties for early unstaking.
 

@@ -7,6 +7,7 @@ import {
   Text,
   useColorModeValue,
   SimpleGrid,
+  Icon,
   Image,
   Select,
   Modal,
@@ -18,16 +19,21 @@ import {
   ModalCloseButton,
   useDisclosure,
 } from "@chakra-ui/react";
+import {
+  MdAttachMoney,
+  MdAccountBalanceWallet,
+  MdEuroSymbol,
+  MdAttachFile,
+  MdDateRange,
+} from "react-icons/md";
 
-import Property1 from "assets/img/nfts/btc1.jpg";
+// Importowanie obrazów
+import Property1 from "assets/img/nfts/btc.png";
 import Property2 from "assets/img/nfts/eth.png";
 import Property3 from "assets/img/nfts/ada.png";
 import Property4 from "assets/img/nfts/dot.png";
 import Property5 from "assets/img/nfts/bnb.png";
 import Property6 from "assets/img/nfts/sql.png";
-import Banner from "views/admin/marketplace/components/Banner";
-import Card from "components/card/Card.js";
-import LastStakes from "views/admin/marketplace/components/Laststakes"; // Import komponentu LastStakes
 
 const stakingPools = [
   {
@@ -35,7 +41,7 @@ const stakingPools = [
     name: 'ETH Staking Pool',
     description: 'Earn rewards by staking Ethereum tokens.',
     apy: '5%',
-    currentRates: '1 ETH = 3450 USD',
+    currentRates: '1 ETH = 10 XYZ',
     options: 'Weekly payouts',
     image: Property2,
     formFields: [
@@ -48,7 +54,7 @@ const stakingPools = [
     name: 'BTC Staking Pool',
     description: 'Stake Bitcoin for monthly rewards.',
     apy: '7%',
-    currentRates: '1 BTC = 58 000 USD',
+    currentRates: '1 BTC = 100 XYZ',
     options: 'Monthly payouts',
     image: Property1,
     formFields: [
@@ -61,7 +67,7 @@ const stakingPools = [
     name: 'ADA Staking Pool',
     description: 'Stake ADA tokens and earn ADA rewards.',
     apy: '6.5%',
-    currentRates: '1 ADA = 0,41 USD',
+    currentRates: '1 ADA = 20 XYZ',
     options: 'Monthly payouts',
     image: Property3,
     formFields: [
@@ -74,7 +80,7 @@ const stakingPools = [
     name: 'DOT Staking Pool',
     description: 'Stake DOT tokens for weekly rewards.',
     apy: '8%',
-    currentRates: '1 DOT = 6,09 USD',
+    currentRates: '1 DOT = 50 XYZ',
     options: 'Weekly payouts',
     image: Property4,
     formFields: [
@@ -87,7 +93,7 @@ const stakingPools = [
     name: 'BNB Staking Pool',
     description: 'Earn BNB rewards by staking BNB tokens.',
     apy: '6%',
-    currentRates: '1 BNB = 533,98 USD',
+    currentRates: '1 BNB = 15 XYZ',
     options: 'Monthly payouts',
     image: Property5,
     formFields: [
@@ -100,7 +106,7 @@ const stakingPools = [
     name: 'SOL Staking Pool',
     description: 'Stake SOL tokens for daily rewards.',
     apy: '9%',
-    currentRates: '1 SOL = 136,82 USD',
+    currentRates: '1 SOL = 75 XYZ',
     options: 'Daily payouts',
     image: Property6,
     formFields: [
@@ -110,7 +116,7 @@ const stakingPools = [
   },
 ];
 
-const Marketplace = () => {
+export default function Marketplace() {
   const textColor = useColorModeValue("secondaryGray.900", "white");
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [selectedPool, setSelectedPool] = useState(null);
@@ -118,24 +124,10 @@ const Marketplace = () => {
     amount: "",
     period: "1 month"
   });
-  const [lastStakes, setLastStakes] = useState([]); // Stan przechowujący listę ostatnich stawek
 
   const handleStakeClick = (poolId) => {
     setSelectedPool(poolId);
     onOpen();
-  };
-
-  const handleStake = () => {
-    // Dodanie nowej stawki do listy lastStakes po zatwierdzeniu formularza
-    const pool = stakingPools.find(pool => pool.id === selectedPool);
-    const newStake = {
-      poolName: pool.name,
-      amount: formData.amount,
-      stakingPeriod: formData.period
-    };
-    setLastStakes([...lastStakes, newStake]);
-    onClose(); // Zamknięcie modala po dodaniu stawki
-    setFormData({ amount: "", period: "1 month" }); // Zresetowanie formularza
   };
 
   const handleChange = (e) => {
@@ -182,55 +174,59 @@ const Marketplace = () => {
   };
 
   return (
-    <Box pt={{ base: "130px", md: "80px", xl: "80px" }}>
+    <Box pt={{ base: "180px", md: "80px", xl: "80px" }}>
       <Grid
-        templateColumns={{ base: "1fr", xl: "1fr 0.46fr" }}
+        mb='20px'
+        gridTemplateColumns={{ xl: "1fr", "2xl": "1fr 0.46fr" }}
         gap={{ base: "20px", xl: "20px" }}
-        display="grid"
-      >
-        <Flex flexDirection="column" alignItems="left">
-        <Banner style={{ maxWidth: "100%", margin: "auto" }} /> {/* Zaktualizowany baner */}
-          <Box mt="40px"> {/* Dodatkowy margines górny */}
-          <SimpleGrid columns={{ base: 1, md: 3 }} gap="20px">
-            {stakingPools.map(pool => (
-              <Card
-                key={pool.id}
-                height="600px"
-                display="flex"
-                flexDirection="column"
-                justifyContent="space-between"
-                p="20px"
-              >
-                <Image src={pool.image} alt={pool.name} height="330px" objectFit="cover" />
-                <Flex align="center" mt="20px">
-                  <Text color={textColor} fontSize="lg" fontWeight="bold">
-                    {pool.name}
+        display={{ base: "block", xl: "grid" }}>
+        <Flex
+          flexDirection='column'
+          gridArea={{ xl: "1 / 1 / 2 / 2", "2xl": "auto" }}>
+          <Banner />
+          <Flex direction='column'>
+            <SimpleGrid
+              columns={{ base: 1, md: 3 }}
+              gap='20px'>
+              {stakingPools.map(pool => (
+                <Card
+                  key={pool.id}
+                  height="350px" // Większa wysokość kart
+                  display="flex"
+                  flexDirection="column"
+                  justifyContent="space-between"
+                  p="20px"
+                >
+                  <Image src={pool.image} alt={pool.name} height="150px" objectFit="cover" />
+                  <Flex align='center' mt='10px'>
+                    <Text color={textColor} fontSize='lg' fontWeight='bold'>
+                      {pool.name}
+                    </Text>
+                  </Flex>
+                  <Text mt='10px' color={textColor} fontSize='md'>
+                    {pool.description}
                   </Text>
-                </Flex>
-                <Text mt="10px" color={textColor} fontSize="md">
-                  {pool.description}
-                </Text>
-                <Text mt="10px" color={textColor} fontSize="md">
-                  <strong>APY:</strong> {pool.apy}
-                </Text>
-                <Text mt="10px" color={textColor} fontSize="md">
-                  <strong>Current Rates:</strong> {pool.currentRates}
-                </Text>
-                <Text mt="10px" color={textColor} fontSize="md">
-                  <strong>Options:</strong> {pool.options}
-                </Text>
-                <Button mt="10px" colorScheme="blue" onClick={() => handleStakeClick(pool.id)} w="full">
-                  Stake
-                </Button>
-              </Card>
-            ))}
-          </SimpleGrid>
-          </Box>
-        </Flex>
-
-        {/* Komponent LastStakes po prawej stronie */}
-        <Flex direction="column" gridColumn="2 / 3" alignItems="center">
-          <LastStakes lastStakes={lastStakes} />
+                  <Text mt='10px' color={textColor} fontSize='md'>
+                    <strong>APY:</strong> {pool.apy}
+                  </Text>
+                  <Text mt='10px' color={textColor} fontSize='md'>
+                    <strong>Current Rates:</strong> {pool.currentRates}
+                  </Text>
+                  <Text mt='10px' color={textColor} fontSize='md'>
+                    <strong>Options:</strong> {pool.options}
+                  </Text>
+                  <Button
+                    mt='10px'
+                    colorScheme='blue'
+                    onClick={() => handleStakeClick(pool.id)}
+                    w='full'
+                  >
+                    Stake
+                  </Button>
+                </Card>
+              ))}
+            </SimpleGrid>
+          </Flex>
         </Flex>
       </Grid>
 
@@ -243,15 +239,13 @@ const Marketplace = () => {
             {renderFormFields()}
           </ModalBody>
           <ModalFooter>
-            <Button colorScheme="blue" mr={3} onClick={onClose}>
+            <Button colorScheme='blue' mr={3} onClick={onClose}>
               Close
             </Button>
-            <Button variant="ghost" onClick={handleStake}>Stake</Button>
+            <Button variant='ghost'>Stake</Button>
           </ModalFooter>
         </ModalContent>
       </Modal>
     </Box>
   );
-};
-
-export default Marketplace;
+}

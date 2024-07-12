@@ -1,118 +1,136 @@
-/*!
-  _   _  ___  ____  ___ ________  _   _   _   _ ___   
- | | | |/ _ \|  _ \|_ _|__  / _ \| \ | | | | | |_ _| 
- | |_| | | | | |_) || |  / / | | |  \| | | | | || | 
- |  _  | |_| |  _ < | | / /| |_| | |\  | | |_| || |
- |_| |_|\___/|_| \_\___/____\___/|_| \_|  \___/|___|
-                                                                                                                                                                                                                                                                                                                                       
-=========================================================
-* Horizon UI - v1.1.0
-=========================================================
+import React, { useState } from "react";
+import {
+  Box,
+  Button,
+  Flex,
+  Grid,
+  Text,
+  useColorModeValue,
+  SimpleGrid,
+  Image,
+  Select,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton,
+  useDisclosure,
+} from "@chakra-ui/react";
 
-* Product Page: https://www.horizon-ui.com/
-* Copyright 2023 Horizon UI (https://www.horizon-ui.com/)
+import Recognition from "assets/img/rewards/Recognition.png";
+import Activity from "assets/img/rewards/Activity.png";
+import Investment from "assets/img/rewards/Investment.png";
 
-* Designed and Coded by Simmmple
+import Card from "components/card/Card";
 
-=========================================================
+const rewardsData = [
+  {
+    id: 1,
+    name: "Bonus for Activity",
+    description: "Earn rewards by participating actively.",
+    amount: "100 USD",
+    image: Activity,
+  },
+  {
+    id: 2,
+    name: "Investment Return",
+    description: "Get returns on your investment.",
+    amount: "250 USD",
+    image: Investment,
+  },
+  {
+    id: 3,
+    name: "Recognition Bonus",
+    description: "Recognition award",
+    amount: "150 USD",
+    image: Recognition,
+  },
+  // Dodaj więcej przykładowych nagród według potrzeb
+];
 
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+const RewardsHistory = () => {
+  const textColor = useColorModeValue("secondaryGray.900", "white");
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const [selectedReward, setSelectedReward] = useState(null);
 
-*/
+  const handleClaimReward = (rewardId) => {
+    setSelectedReward(rewardId);
+    onOpen();
+  };
 
-// Chakra imports
-import { Box, Grid } from "@chakra-ui/react";
+  const handleClaim = () => {
+    // Logika do obsługi odebrania nagrody
+    console.log(`Claiming reward with ID: ${selectedReward}`);
+    onClose(); // Zamknięcie modala po odebraniu nagrody
+  };
 
-// Custom components
-import Banner from "views/admin/profile/components/Banner";
-import General from "views/admin/profile/components/General";
-import Notifications from "views/admin/profile/components/Notifications";
-import Projects from "views/admin/profile/components/Projects";
-import Storage from "views/admin/profile/components/Storage";
-import Upload from "views/admin/profile/components/Upload";
-
-// Assets
-import banner from "assets/img/auth/banner.png";
-import avatar from "assets/img/avatars/avatar4.png";
-import React from "react";
-
-export default function Overview() {
   return (
     <Box pt={{ base: "130px", md: "80px", xl: "80px" }}>
-      {/* Main Fields */}
       <Grid
-        templateColumns={{
-          base: "1fr",
-          lg: "1.34fr 1fr 1.62fr",
-        }}
-        templateRows={{
-          base: "repeat(3, 1fr)",
-          lg: "1fr",
-        }}
-        gap={{ base: "20px", xl: "20px" }}>
-        <Banner
-          gridArea='1 / 1 / 2 / 2'
-          banner={banner}
-          avatar={avatar}
-          name='Adela Parkson'
-          job='Product Designer'
-          posts='17'
-          followers='9.7k'
-          following='274'
-        />
-        <Storage
-          gridArea={{ base: "2 / 1 / 3 / 2", lg: "1 / 2 / 2 / 3" }}
-          used={25.6}
-          total={50}
-        />
-        <Upload
-          gridArea={{
-            base: "3 / 1 / 4 / 2",
-            lg: "1 / 3 / 2 / 4",
-          }}
-          minH={{ base: "auto", lg: "420px", "2xl": "365px" }}
-          pe='20px'
-          pb={{ base: "100px", lg: "20px" }}
-        />
+        templateColumns={{ base: "1fr", xl: "1fr 0.46fr" }}
+        gap={{ base: "20px", xl: "20px" }}
+        display="grid"
+      >
+        <Flex flexDirection="column" alignItems="left">
+          <Box mt="40px"> {/* Dodatkowy margines górny */}
+            <SimpleGrid columns={{ base: 1, md: 3 }} gap="20px">
+              {rewardsData.map((reward) => (
+                <Card
+                  key={reward.id}
+                  height="600px"
+                  display="flex"
+                  flexDirection="column"
+                  justifyContent="space-between"
+                  p="20px"
+                >
+                  <Image src={reward.image} alt={reward.name} height="330px" objectFit="cover" />
+                  <Flex align="center" mt="20px">
+                    <Text color={textColor} fontSize="lg" fontWeight="bold">
+                      {reward.name}
+                    </Text>
+                  </Flex>
+                  <Text mt="10px" color={textColor} fontSize="md">
+                    {reward.description}
+                  </Text>
+                  <Text mt="10px" color={textColor} fontSize="md">
+                    <strong>Amount:</strong> {reward.amount}
+                  </Text>
+                  <Button mt="10px" colorScheme="blue" onClick={() => handleClaimReward(reward.id)} w="full">
+                    Claim
+                  </Button>
+                </Card>
+              ))}
+            </SimpleGrid>
+          </Box>
+        </Flex>
+
+        {/* Pusty placeholder po prawej stronie */}
+        <Box gridColumn="2 / 3"></Box>
       </Grid>
-      <Grid
-        mb='20px'
-        templateColumns={{
-          base: "1fr",
-          lg: "repeat(2, 1fr)",
-          "2xl": "1.34fr 1.62fr 1fr",
-        }}
-        templateRows={{
-          base: "1fr",
-          lg: "repeat(2, 1fr)",
-          "2xl": "1fr",
-        }}
-        gap={{ base: "20px", xl: "20px" }}>
-        <Projects
-          gridArea='1 / 2 / 2 / 2'
-          banner={banner}
-          avatar={avatar}
-          name='Adela Parkson'
-          job='Product Designer'
-          posts='17'
-          followers='9.7k'
-          following='274'
-        />
-        <General
-          gridArea={{ base: "2 / 1 / 3 / 2", lg: "1 / 2 / 2 / 3" }}
-          minH='365px'
-          pe='20px'
-        />
-        <Notifications
-          used={25.6}
-          total={50}
-          gridArea={{
-            base: "3 / 1 / 4 / 2",
-            lg: "2 / 1 / 3 / 3",
-            "2xl": "1 / 3 / 2 / 4",
-          }}
-        />
-      </Grid>
+
+      {/* Modal do odebrania nagrody */}
+      <Modal isOpen={isOpen} onClose={onClose}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Claim Reward</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <Text>Are you sure you want to claim this reward?</Text>
+          </ModalBody>
+          <ModalFooter>
+            <Button colorScheme="blue" mr={3} onClick={onClose}>
+              Close
+            </Button>
+            <Button variant="ghost" onClick={handleClaim}>
+              Claim
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
     </Box>
   );
-}
+};
+
+export default RewardsHistory;

@@ -1,305 +1,358 @@
-/*!
-  _   _  ___  ____  ___ ________  _   _   _   _ ___   
- | | | |/ _ \|  _ \|_ _|__  / _ \| \ | | | | | |_ _| 
- | |_| | | | | |_) || |  / / | | |  \| | | | | || | 
- |  _  | |_| |  _ < | | / /| |_| | |\  | | |_| || |
- |_| |_|\___/|_| \_\___/____\___/|_| \_|  \___/|___|
-                                                                                                                                                                                                                                                                                                                                       
-=========================================================
-* Horizon UI - v1.1.0
-=========================================================
+// Transactions.js
 
-* Product Page: https://www.horizon-ui.com/
-* Copyright 2023 Horizon UI (https://www.horizon-ui.com/)
-
-* Designed and Coded by Simmmple
-
-=========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-*/
-
-import React from "react";
-
-// Chakra imports
+import React, { useState } from "react";
 import {
   Box,
-  Button,
-  Flex,
-  Grid,
-  Link,
   Text,
-  useColorModeValue,
   SimpleGrid,
+  Grid,
+  GridItem,
+  useColorModeValue,
+  Image,
+  Input,
+  Select,
+  Button,
 } from "@chakra-ui/react";
+import Card from "components/card/Card";
 
-// Custom components
-import Banner from "views/admin/marketplace/components/Banner";
-import TableTopCreators from "views/admin/marketplace/components/TableTopCreators";
-import HistoryItem from "views/admin/marketplace/components/HistoryItem";
-import NFT from "components/card/NFT";
-import Card from "components/card/Card.js";
+import Property1 from "assets/img/nfts/btc1.jpg";
+import Property2 from "assets/img/nfts/eth.png";
+import Property3 from "assets/img/nfts/ada.png";
+import Property4 from "assets/img/nfts/dot.png";
+import Property5 from "assets/img/nfts/bnb.png";
+import Property6 from "assets/img/nfts/sql.png";
+import Property7 from "assets/img/nfts/ubit.png"; 
 
-// Assets
-import Nft1 from "assets/img/nfts/Nft1.png";
-import Nft2 from "assets/img/nfts/Nft2.png";
-import Nft3 from "assets/img/nfts/Nft3.png";
-import Nft4 from "assets/img/nfts/Nft4.png";
-import Nft5 from "assets/img/nfts/Nft5.png";
-import Nft6 from "assets/img/nfts/Nft6.png";
-import Avatar1 from "assets/img/avatars/avatar1.png";
-import Avatar2 from "assets/img/avatars/avatar2.png";
-import Avatar3 from "assets/img/avatars/avatar3.png";
-import Avatar4 from "assets/img/avatars/avatar4.png";
-import tableDataTopCreators from "views/admin/marketplace/variables/tableDataTopCreators.json";
-import { tableColumnsTopCreators } from "views/admin/marketplace/variables/tableColumnsTopCreators";
+const transactions = [
+  {
+    date: "12 Jul 2023, 14:32",
+    type: "Staking",
+    amount: "150 UBIT",
+    status: "Completed",
+    token: "UBIT",
+    icon: Property7,
+  },
+  {
+    date: "15 Jul 2023, 09:21",
+    type: "Unstaking",
+    amount: "50 UBIT",
+    status: "In Progress",
+    token: "UBIT",
+    icon: Property7,
+  },
+  {
+    date: "18 Jul 2023, 17:45",
+    type: "Reward",
+    amount: "10 UBIT",
+    status: "Completed",
+    token: "UBIT",
+    icon: Property7,
+  },
+  {
+    date: "20 Jul 2023, 12:00",
+    type: "Staking",
+    amount: "200 UBIT",
+    status: "Failed",
+    token: "UBIT",
+    icon: Property7,
+  },
+  {
+    date: "22 Jul 2023, 10:00",
+    type: "Staking",
+    amount: "2 ETH",
+    status: "Completed",
+    token: "ETH",
+    icon: Property2,
+  },
+  {
+    date: "25 Jul 2023, 11:30",
+    type: "Unstaking",
+    amount: "0.5 ETH",
+    status: "In Progress",
+    token: "ETH",
+    icon: Property2,
+  },
+  {
+    date: "28 Jul 2023, 09:15",
+    type: "Reward",
+    amount: "0.1 ETH",
+    status: "Completed",
+    token: "ETH",
+    icon: Property2,
+  },
+  {
+    date: "30 Jul 2023, 16:45",
+    type: "Staking",
+    amount: "3 BTC",
+    status: "Completed",
+    token: "BTC",
+    icon: Property1,
+  },
+  {
+    date: "01 Aug 2023, 13:00",
+    type: "Unstaking",
+    amount: "1 BTC",
+    status: "In Progress",
+    token: "BTC",
+    icon: Property1,
+  },
+  {
+    date: "03 Aug 2023, 18:00",
+    type: "Reward",
+    amount: "0.05 BTC",
+    status: "Completed",
+    token: "BTC",
+    icon: Property1,
+  },
+  {
+    date: "05 Aug 2023, 12:30",
+    type: "Staking",
+    amount: "1000 ADA",
+    status: "Completed",
+    token: "ADA",
+    icon: Property3,
+  },
+  {
+    date: "08 Aug 2023, 14:45",
+    type: "Unstaking",
+    amount: "300 ADA",
+    status: "In Progress",
+    token: "ADA",
+    icon: Property3,
+  },
+  {
+    date: "10 Aug 2023, 10:20",
+    type: "Reward",
+    amount: "50 ADA",
+    status: "Completed",
+    token: "ADA",
+    icon: Property3,
+  },
+  {
+    date: "12 Aug 2023, 09:30",
+    type: "Staking",
+    amount: "500 DOT",
+    status: "Completed",
+    token: "DOT",
+    icon: Property4,
+  },
+  {
+    date: "15 Aug 2023, 08:15",
+    type: "Unstaking",
+    amount: "150 DOT",
+    status: "In Progress",
+    token: "DOT",
+    icon: Property4,
+  },
+  {
+    date: "17 Aug 2023, 12:45",
+    type: "Reward",
+    amount: "25 DOT",
+    status: "Completed",
+    token: "DOT",
+    icon: Property4,
+  },
+  {
+    date: "20 Aug 2023, 11:00",
+    type: "Staking",
+    amount: "10 BNB",
+    status: "Completed",
+    token: "BNB",
+    icon: Property5,
+  },
+  {
+    date: "23 Aug 2023, 13:45",
+    type: "Unstaking",
+    amount: "3 BNB",
+    status: "In Progress",
+    token: "BNB",
+    icon: Property5,
+  },
+  {
+    date: "25 Aug 2023, 09:30",
+    type: "Reward",
+    amount: "1 BNB",
+    status: "Completed",
+    token: "BNB",
+    icon: Property5,
+  },
+  {
+    date: "27 Aug 2023, 16:30",
+    type: "Staking",
+    amount: "200 SOL",
+    status: "Completed",
+    token: "SOL",
+    icon: Property6,
+  },
+  {
+    date: "30 Aug 2023, 14:00",
+    type: "Unstaking",
+    amount: "50 SOL",
+    status: "In Progress",
+    token: "SOL",
+    icon: Property6,
+  },
+  {
+    date: "01 Sep 2023, 18:30",
+    type: "Reward",
+    amount: "10 SOL",
+    status: "Completed",
+    token: "SOL",
+    icon: Property6,
+  },
+];
 
-export default function Marketplace() {
-  // Chakra Color Mode
+const Transactions = () => {
   const textColor = useColorModeValue("secondaryGray.900", "white");
-  const textColorBrand = useColorModeValue("brand.500", "white");
-  return (
-    <Box pt={{ base: "180px", md: "80px", xl: "80px" }}>
-      {/* Main Fields */}
-      <Grid
-        mb='20px'
-        gridTemplateColumns={{ xl: "repeat(3, 1fr)", "2xl": "1fr 0.46fr" }}
-        gap={{ base: "20px", xl: "20px" }}
-        display={{ base: "block", xl: "grid" }}>
-        <Flex
-          flexDirection='column'
-          gridArea={{ xl: "1 / 1 / 2 / 3", "2xl": "1 / 1 / 2 / 2" }}>
-          <Banner />
-          <Flex direction='column'>
-            <Flex
-              mt='45px'
-              mb='20px'
-              justifyContent='space-between'
-              direction={{ base: "column", md: "row" }}
-              align={{ base: "start", md: "center" }}>
-              <Text color={textColor} fontSize='2xl' ms='24px' fontWeight='700'>
-                Trending NFTs
-              </Text>
-              <Flex
-                align='center'
-                me='20px'
-                ms={{ base: "24px", md: "0px" }}
-                mt={{ base: "20px", md: "0px" }}>
-                <Link
-                  color={textColorBrand}
-                  fontWeight='500'
-                  me={{ base: "34px", md: "44px" }}
-                  to='#art'>
-                  Art
-                </Link>
-                <Link
-                  color={textColorBrand}
-                  fontWeight='500'
-                  me={{ base: "34px", md: "44px" }}
-                  to='#music'>
-                  Music
-                </Link>
-                <Link
-                  color={textColorBrand}
-                  fontWeight='500'
-                  me={{ base: "34px", md: "44px" }}
-                  to='#collectibles'>
-                  Collectibles
-                </Link>
-                <Link color={textColorBrand} fontWeight='500' to='#sports'>
-                  Sports
-                </Link>
-              </Flex>
-            </Flex>
-            <SimpleGrid columns={{ base: 1, md: 3 }} gap='20px'>
-              <NFT
-                name='Abstract Colors'
-                author='By Esthera Jackson'
-                bidders={[
-                  Avatar1,
-                  Avatar2,
-                  Avatar3,
-                  Avatar4,
-                  Avatar1,
-                  Avatar1,
-                  Avatar1,
-                  Avatar1,
-                ]}
-                image={Nft1}
-                currentbid='0.91 ETH'
-                download='#'
-              />
-              <NFT
-                name='ETH AI Brain'
-                author='By Nick Wilson'
-                bidders={[
-                  Avatar1,
-                  Avatar2,
-                  Avatar3,
-                  Avatar4,
-                  Avatar1,
-                  Avatar1,
-                  Avatar1,
-                  Avatar1,
-                ]}
-                image={Nft2}
-                currentbid='0.91 ETH'
-                download='#'
-              />
-              <NFT
-                name='Mesh Gradients '
-                author='By Will Smith'
-                bidders={[
-                  Avatar1,
-                  Avatar2,
-                  Avatar3,
-                  Avatar4,
-                  Avatar1,
-                  Avatar1,
-                  Avatar1,
-                  Avatar1,
-                ]}
-                image={Nft3}
-                currentbid='0.91 ETH'
-                download='#'
-              />
-            </SimpleGrid>
-            <Text
-              mt='45px'
-              mb='36px'
-              color={textColor}
-              fontSize='2xl'
-              ms='24px'
-              fontWeight='700'>
-              Recently Added
-            </Text>
-            <SimpleGrid
-              columns={{ base: 1, md: 3 }}
-              gap='20px'
-              mb={{ base: "20px", xl: "0px" }}>
-              <NFT
-                name='Swipe Circles'
-                author='By Peter Will'
-                bidders={[
-                  Avatar1,
-                  Avatar2,
-                  Avatar3,
-                  Avatar4,
-                  Avatar1,
-                  Avatar1,
-                  Avatar1,
-                  Avatar1,
-                ]}
-                image={Nft4}
-                currentbid='0.91 ETH'
-                download='#'
-              />
-              <NFT
-                name='Colorful Heaven'
-                author='By Mark Benjamin'
-                bidders={[
-                  Avatar1,
-                  Avatar2,
-                  Avatar3,
-                  Avatar4,
-                  Avatar1,
-                  Avatar1,
-                  Avatar1,
-                  Avatar1,
-                ]}
-                image={Nft5}
-                currentbid='0.91 ETH'
-                download='#'
-              />
-              <NFT
-                name='3D Cubes Art'
-                author='By Manny Gates'
-                bidders={[
-                  Avatar1,
-                  Avatar2,
-                  Avatar3,
-                  Avatar4,
-                  Avatar1,
-                  Avatar1,
-                  Avatar1,
-                  Avatar1,
-                ]}
-                image={Nft6}
-                currentbid='0.91 ETH'
-                download='#'
-              />
-            </SimpleGrid>
-          </Flex>
-        </Flex>
-        <Flex
-          flexDirection='column'
-          gridArea={{ xl: "1 / 3 / 2 / 4", "2xl": "1 / 2 / 2 / 3" }}>
-          <Card px='0px' mb='20px'>
-            <TableTopCreators
-              tableData={tableDataTopCreators}
-              columnsData={tableColumnsTopCreators}
-            />
-          </Card>
-          <Card p='0px'>
-            <Flex
-              align={{ sm: "flex-start", lg: "center" }}
-              justify='space-between'
-              w='100%'
-              px='22px'
-              py='18px'>
-              <Text color={textColor} fontSize='xl' fontWeight='600'>
-                History
-              </Text>
-              <Button variant='action'>See all</Button>
-            </Flex>
+  const [filteredTransactions, setFilteredTransactions] = useState(transactions);
+  const [filterOptions, setFilterOptions] = useState({
+    fromDate: "",
+    toDate: "",
+    minAmount: "",
+    maxAmount: "",
+    status: "",
+    token: "",
+  });
 
-            <HistoryItem
-              name='Colorful Heaven'
-              author='By Mark Benjamin'
-              date='30s ago'
-              image={Nft5}
-              price='0.91 ETH'
-            />
-            <HistoryItem
-              name='Abstract Colors'
-              author='By Esthera Jackson'
-              date='58s ago'
-              image={Nft1}
-              price='0.91 ETH'
-            />
-            <HistoryItem
-              name='ETH AI Brain'
-              author='By Nick Wilson'
-              date='1m ago'
-              image={Nft2}
-              price='0.91 ETH'
-            />
-            <HistoryItem
-              name='Swipe Circles'
-              author='By Peter Will'
-              date='1m ago'
-              image={Nft4}
-              price='0.91 ETH'
-            />
-            <HistoryItem
-              name='Mesh Gradients '
-              author='By Will Smith'
-              date='2m ago'
-              image={Nft3}
-              price='0.91 ETH'
-            />
-            <HistoryItem
-              name='3D Cubes Art'
-              author='By Manny Gates'
-              date='3m ago'
-              image={Nft6}
-              price='0.91 ETH'
-            />
+  const handleFilter = () => {
+    let filteredData = [...transactions];
+
+    if (filterOptions.fromDate && filterOptions.toDate) {
+      filteredData = filteredData.filter(
+        (transaction) =>
+          new Date(transaction.date) >= new Date(filterOptions.fromDate) &&
+          new Date(transaction.date) <= new Date(filterOptions.toDate)
+      );
+    }
+
+    if (filterOptions.minAmount) {
+      filteredData = filteredData.filter(
+        (transaction) => parseFloat(transaction.amount) >= parseFloat(filterOptions.minAmount)
+      );
+    }
+
+    if (filterOptions.maxAmount) {
+      filteredData = filteredData.filter(
+        (transaction) => parseFloat(transaction.amount) <= parseFloat(filterOptions.maxAmount)
+      );
+    }
+
+    if (filterOptions.status) {
+      filteredData = filteredData.filter(
+        (transaction) => transaction.status.toLowerCase() === filterOptions.status.toLowerCase()
+      );
+    }
+
+    if (filterOptions.token) {
+      filteredData = filteredData.filter(
+        (transaction) => transaction.token.toLowerCase() === filterOptions.token.toLowerCase()
+      );
+    }
+
+    setFilteredTransactions(filteredData);
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFilterOptions({ ...filterOptions, [name]: value });
+  };
+
+  const handleReset = () => {
+    setFilterOptions({
+      fromDate: "",
+      toDate: "",
+      minAmount: "",
+      maxAmount: "",
+      status: "",
+      token: "",
+    });
+    setFilteredTransactions(transactions);
+  };
+
+  return (
+    <Box pt={{ base: "130px", md: "80px", xl: "80px" }}>
+      <Box mb="20px">
+        <Grid
+          templateColumns={{ base: "1fr", md: "1fr 1fr 1fr 1fr" }}
+          gap={{ base: "10px", md: "10px" }}
+        >
+          <Input
+            type="date"
+            name="fromDate"
+            value={filterOptions.fromDate}
+            onChange={handleChange}
+            placeholder="From Date"
+          />
+          <Input
+            type="date"
+            name="toDate"
+            value={filterOptions.toDate}
+            onChange={handleChange}
+            placeholder="To Date"
+          />
+          <Input
+            type="number"
+            name="minAmount"
+            value={filterOptions.minAmount}
+            onChange={handleChange}
+            placeholder="Min Amount"
+          />
+          <Input
+            type="number"
+            name="maxAmount"
+            value={filterOptions.maxAmount}
+            onChange={handleChange}
+            placeholder="Max Amount"
+          />
+          <Select name="status" value={filterOptions.status} onChange={handleChange}>
+            <option value="">Select Status</option>
+            <option value="completed">Completed</option>
+            <option value="in progress">In Progress</option>
+            <option value="failed">Failed</option>
+          </Select>
+          <Select name="token" value={filterOptions.token} onChange={handleChange}>
+            <option value="">Select Token</option>
+            <option value="ubit">UBIT</option>
+            <option value="eth">ETH</option>
+            <option value="btc">BTC</option>
+            <option value="ada">ADA</option>
+            <option value="dot">DOT</option>
+            <option value="bnb">BNB</option>
+            <option value="sol">SOL</option>
+          </Select>
+          <Button onClick={handleFilter}>Filter</Button>
+          <Button onClick={handleReset}>Reset</Button>
+        </Grid>
+      </Box>
+
+      <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing="20px">
+        {filteredTransactions.map((transaction, index) => (
+          <Card
+            key={index}
+            height="auto"
+            display="flex"
+            flexDirection="column"
+            justifyContent="space-between"
+            p="20px"
+          >
+            <Image src={transaction.icon} alt={transaction.token} height="100px" objectFit="contain" />
+            <Text mt="10px" color={textColor} fontSize="md">
+              <strong>DATE & TIME:</strong> {transaction.date}
+            </Text>
+            <Text mt="10px" color={textColor} fontSize="md">
+              <strong>TRANSACTION TYPE:</strong> {transaction.type}
+            </Text>
+            <Text mt="10px" color={textColor} fontSize="md">
+              <strong>AMOUNT:</strong> {transaction.amount}
+            </Text>
+            <Text mt="10px" color={textColor} fontSize="md">
+              <strong>STATUS:</strong> {transaction.status}
+            </Text>
           </Card>
-        </Flex>
-      </Grid>
-      {/* Delete Product */}
+        ))}
+      </SimpleGrid>
     </Box>
   );
-}
+};
+
+export default Transactions;

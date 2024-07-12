@@ -1,68 +1,171 @@
-import React from "react";
-// Chakra imports
-import { Flex, Icon, Image, Text, useColorModeValue } from "@chakra-ui/react";
-// Custom components
-import Card from "components/card/Card.js";
-// Assets
-import { FaEthereum } from "react-icons/fa";
+import {
+  Flex,
+  Table,
+  Icon,
+  Tbody,
+  Td,
+  Text,
+  Th,
+  Thead,
+  Tr,
+  useColorModeValue,
+} from "@chakra-ui/react";
+import React, { useMemo } from "react";
+import {
+  useGlobalFilter,
+  usePagination,
+  useSortBy,
+  useTable,
+} from "react-table";
 
-export default function NFT(props) {
-  const { image, name, author, date, price } = props;
-  // Chakra Color Mode
-  const textColor = useColorModeValue("brands.900", "white");
-  const bgItem = useColorModeValue(
-    { bg: "white", boxShadow: "0px 40px 58px -20px rgba(112, 144, 176, 0.12)" },
-    { bg: "navy.700", boxShadow: "unset" }
+// Custom components
+import Card from "components/card/Card";
+import Menu from "components/menu/MainMenu";
+
+// Assets
+import { MdCheckCircle, MdCancel, MdOutlineError, MdPending } from "react-icons/md";
+
+export default function ColumnsTable(props) {
+  const { columnsData, tableData } = props;
+
+  const columns = useMemo(() => columnsData, [columnsData]);
+  const data = useMemo(() => tableData, [tableData]);
+
+  const tableInstance = useTable(
+    {
+      columns,
+      data,
+    },
+    useGlobalFilter,
+    useSortBy,
+    usePagination
   );
-  const textColorDate = useColorModeValue("secondaryGray.600", "white");
+
+  const {
+    getTableProps,
+    getTableBodyProps,
+    headerGroups,
+    page,
+    prepareRow,
+    initialState,
+  } = tableInstance;
+  initialState.pageSize = 5;
+
+  const textColor = useColorModeValue("secondaryGray.900", "white");
+  const borderColor = useColorModeValue("gray.200", "whiteAlpha.100");
   return (
     <Card
-      _hover={bgItem}
-      bg='transparent'
-      boxShadow='unset'
-      px='24px'
-      py='21px'
-      transition='0.2s linear'>
-      <Flex direction={{ base: "column" }} justify='center'>
-        <Flex position='relative' align='center'>
-          <Image src={image} w='66px' h='66px' borderRadius='20px' me='16px' />
-          <Flex
-            direction='column'
-            w={{ base: "70%", md: "100%" }}
-            me={{ base: "4px", md: "32px", xl: "10px", "3xl": "32px" }}>
-            <Text
-              color={textColor}
-              fontSize={{
-                base: "md",
-              }}
-              mb='5px'
-              fontWeight='bold'
-              me='14px'>
-              {name}
-            </Text>
-            <Text
-              color='secondaryGray.600'
-              fontSize={{
-                base: "sm",
-              }}
-              fontWeight='400'
-              me='14px'>
-              {author}
-            </Text>
-          </Flex>
-          <Flex
-            me={{ base: "4px", md: "32px", xl: "10px", "3xl": "32px" }}
-            align='center'>
-            <Icon as={FaEthereum} color={textColor} width='9px' me='7px' />
-            <Text fontWeight='700' fontSize='md' color={textColor}>
-              {price}
-            </Text>
-          </Flex>
-          <Text ms='auto' fontWeight='700' fontSize='sm' color={textColorDate}>
-            {date}
-          </Text>
-        </Flex>
+      direction='column'
+      w='100%'
+      px='0px'
+      overflowX={{ sm: "scroll", lg: "hidden" }}>
+      <Flex px='25px' justify='space-between' mb='10px' align='center'>
+        <Text
+          color={textColor}
+          fontSize='22px'
+          fontWeight='700'
+          lineHeight='100%'>
+          Last Transactions
+        </Text>
+        <Menu />
       </Flex>
+      <Table {...getTableProps()} variant='simple' color='gray.500' mb='24px'>
+        <Thead>
+          {headerGroups.map((headerGroup, index) => (
+            <Tr {...headerGroup.getHeaderGroupProps()} key={index}>
+              {headerGroup.headers.map((column, index) => (
+                <Th
+                  {...column.getHeaderProps(column.getSortByToggleProps())}
+                  pe='10px'
+                  key={index}
+                  borderColor={borderColor}>
+                  <Flex
+                    justify='space-between'
+                    align='center'
+                    fontSize={{ sm: "10px", lg: "12px" }}
+                    color='gray.400'>
+                    {column.render("Header")}
+                  </Flex>
+                </Th>
+              ))}
+            </Tr>
+          ))}
+        </Thead>
+        <Tbody {...getTableBodyProps()}>
+          {page.map((row, index) => {
+            prepareRow(row);
+            return (
+              <Tr {...row.getRowProps()} key={index}>
+                {row.cells.map((cell, index) => {
+                  let data = "";
+                  if (cell.column.Header === "DATE&TIME") {
+                    data = (
+                      <Text color={textColor} fontSize='sm' fontWeight='700'>
+                        {cell.value}
+                      </Text>
+                    );
+                  } else if (cell.column.Header === "STATUS") {
+                    data = (
+                      <Flex align='center'>
+                        <Icon
+                          w='24px'
+                          h='24px'
+                          me='5px'
+                          color={
+                            cell.value === "Completed"
+                              ? "green.500"
+                              : cell.value === "In Progress"
+                              ? "orange.500"
+                              : cell.value === "Failed"
+                              ? "red.500"
+                              : null
+                          }
+                          as={
+                            cell.value === "Completed"
+                              ? MdCheckCircle
+                              : cell.value === "In Progress"
+                              ? MdPending
+                              : cell.value === "Failed"
+                              ? MdCancel
+                              : null
+                          }
+                        />
+                        <Text color={textColor} fontSize='sm' fontWeight='700'>
+                          {cell.value}
+                        </Text>
+                      </Flex>
+                    );
+                  } else if (cell.column.Header === "TRANSACTION TYPE") {
+                    data = (
+                      <Text color={textColor} fontSize='sm' fontWeight='700'>
+                        {cell.value}
+                      </Text>
+                    );
+                  } else if (cell.column.Header === "AMOUNT") {
+                    data = (
+                      <Text color={textColor} fontSize='sm' fontWeight='700'>
+                        {cell.value}
+                      </Text>
+                    );
+                  }
+                  return (
+                    <Td
+                      {...cell.getCellProps()}
+                      key={index}
+                      fontSize={{ sm: "14px" }}
+                      maxH='30px !important'
+                      py='8px'
+                      minW={{ sm: "150px", md: "200px", lg: "auto" }}
+                      borderColor='transparent'>
+                      {data}
+                    </Td>
+                  );
+                })}
+              </Tr>
+            );
+          })}
+        </Tbody>
+      </Table>
     </Card>
   );
 }

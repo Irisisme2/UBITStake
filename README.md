@@ -29,7 +29,8 @@ UBITStake allows users to participate in various staking pools, earn rewards, an
 - **🎁 Rewards**  
   Users can earn rewards based on their staked tokens and the staking pool’s reward rate. The platform calculates and displays rewards in real-time, and users can claim their rewards directly from the dashboard.
 ![rewards.png](https://cdn.dorahacks.io/static/files/190a8b2a53264b28fe7ae514c5dba4fd.png)
-![rewards.png](Uploading...)
+
+![transcactions.png](https://cdn.dorahacks.io/static/files/190a8c5862621e0241f0c4f469582123.png)
 
 - **🔒 Security**  
   Security is a top priority for UBITStake. The platform uses the UBIT Blockchain for all transactions, ensuring that they are secure and transparent. Additionally, UBITStake implements two-factor authentication (2FA) for enhanced account security.

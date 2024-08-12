@@ -5,7 +5,7 @@ import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
 contract StakingContract is Ownable {
-    IERC20 public ubitToken;
+    IERC20 public ubitStakeToken;
 
     struct Stake {
         uint256 amount;
@@ -17,13 +17,13 @@ contract StakingContract is Ownable {
 
     uint256 public rewardRate = 100; // Example reward rate
 
-    constructor(IERC20 _ubitToken) Ownable(msg.sender) {
-        ubitToken = _ubitToken;
+    constructor(IERC20 _ubitStakeToken) Ownable(msg.sender) {
+        ubitStakeToken = _ubitStakeToken;
     }
 
     function stake(uint256 _amount) external {
         require(_amount > 0, "Amount must be greater than 0");
-        require(ubitToken.transferFrom(msg.sender, address(this), _amount), "Transfer failed");
+        require(ubitStakeToken.transferFrom(msg.sender, address(this), _amount), "Transfer failed");
 
         if (stakes[msg.sender].amount > 0) {
             rewards[msg.sender] += calculateReward(msg.sender);
@@ -40,7 +40,7 @@ contract StakingContract is Ownable {
         rewards[msg.sender] += calculateReward(msg.sender);
 
         stakes[msg.sender].amount -= _amount;
-        ubitToken.transfer(msg.sender, _amount);
+        ubitStakeToken.transfer(msg.sender, _amount);
 
         if (stakes[msg.sender].amount == 0) {
             stakes[msg.sender].startTime = 0;
@@ -54,7 +54,7 @@ contract StakingContract is Ownable {
         rewards[msg.sender] = 0;
         stakes[msg.sender].startTime = block.timestamp;
 
-        ubitToken.transfer(msg.sender, reward);
+        ubitStakeToken.transfer(msg.sender, reward);
     }
 
     function calculateReward(address _staker) internal view returns (uint256) {
